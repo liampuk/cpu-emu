@@ -59,6 +59,7 @@ class State:
 
     def update(self):
         # Write to bus
+        self.bus = 0
         if Control.Eu in self.control_active_bits:
             self.bus = self.alu
         if Control.Ea in self.control_active_bits:
@@ -119,7 +120,6 @@ class State:
 
 def run():
     state = State()
-    state.print()
     for i in range(1, 100):
         state.step_clock()
 
