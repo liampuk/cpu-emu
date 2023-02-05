@@ -9,6 +9,17 @@ This is a simulation of the SAP-1 computer from Digital Computer Electronics. [B
 - 4 bit address width
 - 16 bytes of memory
 
+### Instruction Set
+
+| Instruction | Opcode | Description               |
+|-------------|--------|---------------------------|
+| NOP         | 0000   | no operation              |
+| LDA         | 0001   | load accumulator          |
+| ADD         | 0010   | add to accumulator        |
+| SUB         | 0011   | subtract from accumulator |
+| OUT         | 0100   | output accumulator        |
+| HLT         | 1111   | halt clock                |
+
 ### Architecture
 
 ![image](https://user-images.githubusercontent.com/17195367/216844700-a00c0eab-8296-4573-83d3-dc027b6c04e4.png)
