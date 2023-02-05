@@ -1,10 +1,6 @@
 # CPU Emulation
 
-This is a simulation of the SAP-1 computer from Digital Computer Electronics.
-
-### Architecture
-
-![image](https://user-images.githubusercontent.com/17195367/216844700-a00c0eab-8296-4573-83d3-dc027b6c04e4.png)
+This is a simulation of the SAP-1 computer from Digital Computer Electronics. [Ben Eater's](https://www.youtube.com/c/beneater) videos are incredible at explaining how this cpu works, as well as possible expansions. [This project](https://github.com/wmvanvliet/8bit) from Marijn van Vliet was very helpful in understanding how to go about emulating a simple cpu like this.
 
 ### Specs
 
@@ -12,6 +8,10 @@ This is a simulation of the SAP-1 computer from Digital Computer Electronics.
 - 4 bit opcodes
 - 4 bit address width
 - 16 bytes of memory
+
+### Architecture
+
+![image](https://user-images.githubusercontent.com/17195367/216844700-a00c0eab-8296-4573-83d3-dc027b6c04e4.png)
 
 Example output during an LDA instruction:
 
