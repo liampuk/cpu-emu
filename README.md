@@ -1,8 +1,19 @@
 # CPU Emulation
 
-This is a simulation of the SAP-1 computer from Digital Computer Electronics
+This is a simulation of the SAP-1 computer from Digital Computer Electronics.
 
-Example output from an LDA instruction:
+### Architecture
+
+![image](https://user-images.githubusercontent.com/17195367/216844700-a00c0eab-8296-4573-83d3-dc027b6c04e4.png)
+
+### Specs
+
+- 8 bit address/data bus
+- 4 bit opcodes
+- 4 bit address width
+- 16 bytes of memory
+
+Example output during an LDA instruction:
 
 ```
 bus 00000000 | clk 0 | t_state 0 | pc 0 | mar 0 | ir 00000000 | alu 0 | reg_a 0 | reg_b  0 | out 0 | control word 000000000000 | control active []
