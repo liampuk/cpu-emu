@@ -42,9 +42,9 @@ class State:
     memory[2] = 0b00110111      # SUB [06]
     memory[3] = 0b01000000      # OUT
     memory[4] = 0b11110000      # HLT
-    memory[5] = 4
-    memory[6] = 2
-    memory[7] = 1
+    memory[5] = 0b00000100
+    memory[6] = 0b00000010
+    memory[7] = 0b00000001
 
     # End Build Memory
 

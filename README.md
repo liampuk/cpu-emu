@@ -34,3 +34,11 @@ bus 00000101 | clk 1 | t_state 3 | pc 1 | mar 5 | ir 00010101 | alu 0 | reg_a 0 
 bus 00000100 | clk 1 | t_state 4 | pc 1 | mar 5 | ir 00010101 | alu 4 | reg_a 4 | reg_b  0 | out 0 | control word 000100100000 | control active ['La', 'CE']
 bus 00000000 | clk 1 | t_state 5 | pc 1 | mar 5 | ir 00010101 | alu 4 | reg_a 4 | reg_b  0 | out 0 | control word 000000000000 | control active []
 ```
+
+### TODO
+
+- ~~write assembler~~
+- add arguments for assembler and simulator
+- assembler outputs bin/a.out (default name)
+- ~~assembler scanner - lexical analysis to produce tokens~~
+- ~~build symbol table of label memory location~~
