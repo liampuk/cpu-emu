@@ -1,4 +1,5 @@
-import operator
+import argparse
+import os
 
 opcodes = {
     'nop': 0b0000,
@@ -14,15 +15,15 @@ class InvalidAssemblyException(Exception):
     pass
 
 
-if __name__ == '__main__':
-    with open("programs/calculator.asm") as asm_file:
-        asm = asm_file.read()
+def assemble(input_file_name, output_file_name=None):
+    output: str = ''
+
+    with open(input_file_name, "r") as input_file:
+        asm = input_file.read()
         lines = asm.split('\n')
 
         tokens = list()
         labels = dict()
-
-        output: str = ''
 
         for line in lines:
             line = line.split(';', 1)[0].strip().lower()
@@ -62,7 +63,26 @@ if __name__ == '__main__':
 
         output += ''.join(f'{int(d):08b}' for d in data)
 
-        print(output)
+    if output_file_name is not None:
+        if not os.path.isdir("bin"):
+            os.makedirs("bin")
+        with open(f'bin/{output_file_name}', "w") as output_file:
+            output_file.write(output)
+
+    return output
 
 
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(
+        prog='sap_1_assembler',
+        description='SAP-1 Assembler',
+    )
+    parser.add_argument('-i', '--input-file', type=str, default=None, help='Input file name')
+    parser.add_argument('-o', '--output-file', type=str, default=None, help='Output file name')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Print output to terminal')
 
+    args = parser.parse_args()
+
+    bytecode = assemble(args.input_file, args.output_file)
+    if args.verbose:
+        print(bytecode)

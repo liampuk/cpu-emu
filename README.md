@@ -4,9 +4,9 @@ This is a simulation of the SAP-1 computer from Digital Computer Electronics. [B
 
 ### Specs
 
-- 8 bit address/data bus
-- 4 bit opcodes
-- 4 bit address width
+- 8-bit address/data bus
+- 4-bit opcodes
+- 4-bit address width
 - 16 bytes of memory
 
 ### Instruction Set
@@ -24,6 +24,26 @@ This is a simulation of the SAP-1 computer from Digital Computer Electronics. [B
 
 ![image](https://user-images.githubusercontent.com/17195367/216844700-a00c0eab-8296-4573-83d3-dc027b6c04e4.png)
 
+### Assembler
+
+The assembler takes an input `.asm` file and outputs to `bin/` if an output file name is specified. `-v` prints the output bytecode eg:
+
+`python sap_1/assembler.py -i sap_1/programs/calculator.asm -o a.out -v`
+
+### Simulator
+
+The simulator can take bytecode, binary files or assembly files as an input, eg:
+
+`python sap_1/simulator.py -b 000100101111000000000010`
+
+or
+
+`python sap_1/simulator.py -f sap_1/bin/a.out`
+
+or
+
+`python sap_1/simulator.py -a sap_1/programs/calculator.asm`
+
 Example output during an LDA instruction:
 
 ```
@@ -34,11 +54,3 @@ bus 00000101 | clk 1 | t_state 3 | pc 1 | mar 5 | ir 00010101 | alu 0 | reg_a 0 
 bus 00000100 | clk 1 | t_state 4 | pc 1 | mar 5 | ir 00010101 | alu 4 | reg_a 4 | reg_b  0 | out 0 | control word 000100100000 | control active ['La', 'CE']
 bus 00000000 | clk 1 | t_state 5 | pc 1 | mar 5 | ir 00010101 | alu 4 | reg_a 4 | reg_b  0 | out 0 | control word 000000000000 | control active []
 ```
-
-### TODO
-
-- ~~write assembler~~
-- add arguments for assembler and simulator
-- assembler outputs bin/a.out (default name)
-- ~~assembler scanner - lexical analysis to produce tokens~~
-- ~~build symbol table of label memory location~~

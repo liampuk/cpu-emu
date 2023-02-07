@@ -1,4 +1,7 @@
+import math
 from enum import Enum
+import argparse
+import assembler
 import microcode
 
 
@@ -19,7 +22,13 @@ class Control(Enum):
 
 
 class State:
+
+    def __init__(self, _bytecode, verbose):
+        self.build_memory(_bytecode)
+        self.verbose = verbose
+
     clock: bool = False
+    verbose: bool = False
 
     bus: int = 0
     memory: list[int] = [0] * 16
@@ -35,18 +44,9 @@ class State:
     reg_b: int = 0
     out: int = 0
 
-    # Build Memory
-
-    memory[0] = 0b00010101      # LDA [05]
-    memory[1] = 0b00100110      # ADD [05]
-    memory[2] = 0b00110111      # SUB [06]
-    memory[3] = 0b01000000      # OUT
-    memory[4] = 0b11110000      # HLT
-    memory[5] = 0b00000100
-    memory[6] = 0b00000010
-    memory[7] = 0b00000001
-
-    # End Build Memory
+    def build_memory(self, bytes_string):
+        for i in range(0, math.floor(len(bytes_string) / 8)):
+            self.memory[i] = int(bytes_string[i*8:i*8 + 8], 2)
 
     def load_microcode(self):
         self.control_word = microcode.matrix[(self.ir & 240) >> 4][self.t_state]
@@ -114,15 +114,41 @@ class State:
             self.load_microcode()
             self.decode_control_word()
             self.update()
-            if self.clock:
+            if self.clock or self.verbose:
                 self.print()
 
 
-def run():
-    state = State()
-    for i in range(1, 100):
+def run(bytecode, verbose):
+    state = State(bytecode, verbose)
+    for i in range(1, 192):
         state.step_clock()
 
 
+def load_file(file_path):
+    with open(file_path, "r") as file_path:
+        file = file_path.read()
+        return file
+
+
 if __name__ == '__main__':
-    run()
+    parser = argparse.ArgumentParser(
+        prog='sap_1_simulator',
+        description='SAP-1 Simulator',
+    )
+    parser.add_argument('-f', '--bytecode-file', type=str, default=None, help='Input bytecode file')
+    parser.add_argument('-b', '--bytecode', type=str, default=None, help='Input bytecode')
+    parser.add_argument('-a', '--assembly-file', type=str, default=None, help='Input assembly file')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Print each time the clock flips')
+
+    args = parser.parse_args()
+
+    if args.bytecode:
+        run(args.bytecode, args.verbose)
+    elif args.bytecode_file:
+        output = load_file(args.bytecode_file)
+        run(output, args.verbose)
+    elif args.assembly_file:
+        output = assembler.assemble(args.assembly_file)
+        run(output, args.verbose)
+    else:
+        print("no bytecode specified")
