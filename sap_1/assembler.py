@@ -15,8 +15,7 @@ class InvalidAssemblyException(Exception):
     pass
 
 
-def assemble(input_file_name, output_file_name=None):
-    output: str = ''
+def assemble(input_file_name, bytes_file_name=None):
 
     with open(input_file_name, "r") as input_file:
         asm = input_file.read()
@@ -49,25 +48,24 @@ def assemble(input_file_name, output_file_name=None):
 
                 tokens.append({"opcode": opcode, "operand": operand})
 
-        for token in tokens:
-            output += f'{opcodes[token["opcode"]]:04b}'
-            if token["operand"] in labels.keys():
-                output += f'{len(tokens) + labels[token["operand"]]["loc"]:04b}'
-            else:
-                output += f'{0:04b}'
+        byte_array = [0] * (len(tokens) + len(labels))
 
-        data = [''] * len(labels)
+        for i, token in enumerate(tokens):
+            byte = opcodes[token["opcode"]] << 4
+            if token["operand"] in labels.keys():
+                byte += len(tokens) + labels[token["operand"]]["loc"]
+            byte_array[i] = byte
 
         for key in labels.keys():
-            data[labels[key]["loc"]] = labels[key]["value"]
+            byte_array[labels[key]["loc"]+len(tokens)] = int(labels[key]["value"])
 
-        output += ''.join(f'{int(d):08b}' for d in data)
+        output = bytearray(byte_array)
 
-    if output_file_name is not None:
+    if bytes_file_name is not None:
         if not os.path.isdir("bin"):
             os.makedirs("bin")
-        with open(f'bin/{output_file_name}', "w") as output_file:
-            output_file.write(output)
+        with open(f'bin/{bytes_file_name}', "wb") as bytes_file:
+            bytes_file.write(output)
 
     return output
 
@@ -78,11 +76,11 @@ if __name__ == '__main__':
         description='SAP-1 Assembler',
     )
     parser.add_argument('-i', '--input-file', type=str, default=None, help='Input file name')
-    parser.add_argument('-o', '--output-file', type=str, default=None, help='Output file name')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Print output to terminal')
+    parser.add_argument('-o', '--bytes-file', type=str, default=None, help='bytes file name')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Print bytes to terminal')
 
     args = parser.parse_args()
 
-    bytecode = assemble(args.input_file, args.output_file)
+    bytecode = assemble(args.input_file, args.bytes_file)
     if args.verbose:
-        print(bytecode)
+        print(f'bytes: {bytecode.hex(" ")}')

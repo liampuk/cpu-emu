@@ -44,9 +44,10 @@ class State:
     reg_b: int = 0
     out: int = 0
 
-    def build_memory(self, bytes_string):
-        for i in range(0, math.floor(len(bytes_string) / 8)):
-            self.memory[i] = int(bytes_string[i*8:i*8 + 8], 2)
+    def build_memory(self, _bytecode):
+        bytes_array = list(_bytecode)
+        for i, byte in enumerate(bytes_array):
+            self.memory[i] = byte
 
     def load_microcode(self):
         self.control_word = microcode.matrix[(self.ir & 240) >> 4][self.t_state]
@@ -125,9 +126,17 @@ def run(bytecode, verbose):
 
 
 def load_file(file_path):
-    with open(file_path, "r") as file_path:
+    with open(file_path, "rb") as file_path:
         file = file_path.read()
         return file
+
+
+def convert_string_to_bytes(bytes_string):
+    num_bytes = math.floor(len(bytes_string) / 8)
+    byte_array = [0] * num_bytes
+    for i in range(0, num_bytes):
+        byte_array[i] = int(bytes_string[i * 8:i * 8 + 8], 2)
+    return bytearray(byte_array)
 
 
 if __name__ == '__main__':
@@ -143,12 +152,12 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.bytecode:
-        run(args.bytecode, args.verbose)
+        run(convert_string_to_bytes(args.bytecode), args.verbose)
     elif args.bytecode_file:
         output = load_file(args.bytecode_file)
         run(output, args.verbose)
     elif args.assembly_file:
-        output = assembler.assemble(args.assembly_file)
-        run(output, args.verbose)
+        input_bytes = assembler.assemble(args.assembly_file)
+        run(input_bytes, args.verbose)
     else:
         print("no bytecode specified")
