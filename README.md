@@ -12,7 +12,7 @@ This is the simplest computer architecture described in Digital Computer Electro
 
 ## SAP-1 extended
 
-This cpu design is very similar to the SAP-1, with a few extra control lines and opcodes. The addition of conditional jump instructions (JC - jump on carry, JZ - jump on zero, JNZ - jump on not zero) make this cpu turing complete, meaning it can theoretically do anything any other cpu can. This is limited in practice by the fact it can only address 16 bytes of memory.
+This cpu design is very similar to the SAP-1, with a few extra control lines and opcodes. The addition of conditional jump instructions (JC - jump on carry, JZ - jump on zero, JNZ - jump on not zero) make this cpu turing complete, meaning it can theoretically do anything any other cpu can. This is (severely) limited in practice by the fact it can only address 16 bytes of memory.
 
 **Extra instructions**
 
