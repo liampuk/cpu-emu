@@ -5,7 +5,7 @@
 start:
     add a       ; add contents of a (2) into accumulator
     out         ; output accumulator
-    jc stop     ; jump to address 4 if the carry flag is set
+    jc stop     ; jump to address 5 if the carry flag is set
     jmp start   ; jump to address 1
 
 stop:
