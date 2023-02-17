@@ -36,8 +36,6 @@ The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sci
 
 ### VGA Circuit
 
-![image](https://user-images.githubusercontent.com/17195367/219518868-c735a553-0020-4292-b746-d2a64722a8ce.png)
-
 The VGA circuit outputs a standard 640 x 480 @ 60HZ timing signal. This will be implemented using a 16MHz oscillator, so is slightly out of spec but should be fine. Output will be in text mode only, with a resolution of 50 x 30 characters (400 x 240 pixels).
 
 To generate the timings and index VRAM a 16 bit counter is used. As one line takes the equivalent of 64 counts, the lower 6 bits (`HA`) are used to generate the horizontal timing and as the lower order VRAM address byte corresponding to values the cpu writes to register X.
@@ -62,6 +60,8 @@ The last bit (`RB`) is used to allow the counter to reach 520 where it is reset.
   - 481 - 488 Front porch (high pulse)
   - 489 - 490 Sync pulse (low pulse)
   - 490 - 520 Back porch (high pulse)
+
+![image](https://user-images.githubusercontent.com/17195367/219518868-c735a553-0020-4292-b746-d2a64722a8ce.png)
 
 #### Horizontal Timing
 
