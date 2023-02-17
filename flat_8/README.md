@@ -51,15 +51,15 @@ The last bit (`RB`) is used to allow the counter to reach 520 where it is reset.
 #### Counter value timings
 
 - Horizontal
-  - 0 - 50  VRAM address
-  - 51 - 52 Front porch (high pulse)
-  - 53 - 60 Sync pulse (low pulse)
-  - 61 - 64 Back porch (high pulse)
+  - 0 - 49  VRAM address
+  - 50 - 51 Front porch (high pulse)
+  - 52 - 59 Sync pulse (low pulse)
+  - 60 - 63 Back porch (high pulse)
 - Vertical
-  - 0 - 480 VRAM address
-  - 481 - 488 Front porch (high pulse)
-  - 489 - 490 Sync pulse (low pulse)
-  - 490 - 520 Back porch (high pulse)
+  - 0 - 479 VRAM address
+  - 480 - 487 Front porch (high pulse)
+  - 488 - 489 Sync pulse (low pulse)
+  - 490 - 519 Back porch (high pulse)
 
 ![image](https://user-images.githubusercontent.com/17195367/219518868-c735a553-0020-4292-b746-d2a64722a8ce.png)
 
