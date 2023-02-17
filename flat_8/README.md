@@ -36,7 +36,7 @@ The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sci
 
 ### VGA Circuit
 
-The VGA circuit outputs a standard 640 x 480 @ 60HZ timing signal. This will be implemented using a 16MHz oscillator, so is slightly out of spec but should be fine. Output will be in text mode only, with a resolution of 50 x 30 characters (400 x 240 pixels).
+The VGA circuit outputs a standard 640 x 480 @ 60Hz timing signal. This will be implemented using a 16MHz oscillator, so is slightly out of spec but should be fine. Output will be in text mode only, with a resolution of 50 x 30 characters (400 x 240 pixels). This design is heavily based off [this series](https://www.youtube.com/watch?v=LCPOXZ7zaD0) by Slu4.
 
 To generate the timings and index VRAM a 16 bit counter is used. As one line takes the equivalent of 64 counts, the lower 6 bits (`HA`) are used to generate the horizontal timing and as the lower order VRAM address byte corresponding to values the cpu writes to register X.
 
