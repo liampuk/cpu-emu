@@ -44,7 +44,7 @@ The next bit (`SB`) is skipped to halve the vertical resolution to 240 pixels.
 
 The next 3 bits (`CRI`) are used to index the row of the character currently pointed to by VRAM (characters are stored as 8 rows of bytes).
 
-The next 5 bits (`VA`) as used as the higher order VRAM address byte. Only 5 bits are required as only 30 characters can be rendered vertically (30 * 8 = 240 pixels).
+The next 5 bits (`VA`) as used as the higher order VRAM address byte corresponding to values the cpu writes to register Y. Only 5 bits are required as only 30 characters can be rendered vertically (30 * 8 = 240 pixels).
 
 The last bit (`RB`) is used to allow the counter to reach 520 where it is reset.
 
