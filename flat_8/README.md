@@ -6,6 +6,7 @@ This emulator is a proof of concept for a breadboard cpu I plan to build. The pl
 - page bit for addressing rom/ram
 - keyboard controller
   - this requires interrupts and 1 input register.
+  - characters encoded into 6 bits (64 characters), with shift bit for capitals and highlight bit for inverted colours (1 byte each)
 - text [vga](https://www.youtube.com/watch?v=LCPOXZ7zaD0) output
   - this requires 3 output registers (vertical and horizontal vram address, data)
   - hold characters in vram, write to vram during blanking intervals
@@ -19,7 +20,7 @@ This emulator is a proof of concept for a breadboard cpu I plan to build. The pl
     - 400x240 resolution
     - 50x30 characters
     - 16 bit counter addresses vram
-    - vram byte + low 3 bits of high 8 bits of counter address (low 3 bits correspond to each row of character byte) character rom
+    - vram byte + low 3 bits of high 8 bits of counter address (low 3 bits correspond to each row of character byte) character rom (AT28C16-20PC)
       - low 8 bits of 16 bit counter map exactly to the horizontal count
       - next 3 bits of higher 8 bits of 16 bit counter map to character lines
 - rom bootloader
@@ -61,25 +62,32 @@ The last bit (`RB`) is used to allow the counter to reach 520 where it is reset.
   - 488 - 489 Sync pulse (low pulse)
   - 490 - 519 Back porch (high pulse)
 
+The way these counts are converted into timing signals is very well explained in [this video](https://www.youtube.com/watch?v=l7rce6IQDWs) from Ben Eater. AND gates are used (fed with inverted/non-inverted lines from the count to equal exact counts) to set 2 SR latches for when pixel data should be shown, and the sync pulse.
+
 ![image](https://user-images.githubusercontent.com/17195367/219518868-c735a553-0020-4292-b746-d2a64722a8ce.png)
 
-#### Horizontal Timing
+#### Timing
 
-| Section     | Time (µs) | Bytes |
-|-------------|-----------|-------|
-| Data        | 25.422    | 50    |
-| Front Porch | 0.636     | 2     |
-| Sync Pulse  | 3.813     | 8     |
-| Back Porch  | 1.907     | 4     |
-| Whole Line  | 31.778    | 64    |
+- Spec Pixel Frequency: 25.175Mhz
+- Actual Clock: 16Mhz
 
-#### Vertical Timing
+#### Horizontal
 
-| Section     | Time (ms) | Lines |
-|-------------|-----------|-------|
-| Data        | 15.253    | 480   |
-| Front Porch | 0.318     | 8     |
-| Sync Pulse  | 0.064     | 2     |
-| Back Porch  | 1.049     | 30    |
-| Whole Page  | 16.683    | 520   |
+| Section     | Time (µs) | Bytes | Pixels | Actual Time (µs) |
+|-------------|-----------|-------|--------|------------------|
+| Data        | 25.422    | 50    | 400    | 25               |
+| Front Porch | 0.636     | 2     | 16     | 1                |
+| Sync Pulse  | 3.813     | 8     | 64     | 4                |
+| Back Porch  | 1.907     | 4     | 32     | 2                |
+| Whole Line  | 31.778    | 64    | 512    | 32               |
+
+#### Vertical
+
+| Section     | Time (ms) | Lines    |
+|-------------|-----------|----------|
+| Data        | 15.253    | 480      |
+| Front Porch | 0.318     | 8 (10?)  |
+| Sync Pulse  | 0.064     | 2        |
+| Back Porch  | 1.049     | 30 (33?) |
+| Whole Page  | 16.683    | 520      |
 
