@@ -91,3 +91,7 @@ The way these counts are converted into timing signals is very well explained in
 | Back Porch  | 1.049     | 30 (33?) |
 | Whole Page  | 16.683    | 520      |
 
+---
+
+Current progress on emulating a display:
+![image](https://user-images.githubusercontent.com/17195367/219976847-c291c90d-acc3-408a-a228-5989a43d04c9.png)
