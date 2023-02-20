@@ -23,13 +23,13 @@ class Display:
     label = None
 
     def __init__(self, t):
-        bitmap_img = BitmapImage(data=bitmap(400, 240), foreground="white", background="black")
+        bitmap_img = BitmapImage(data=bitmap(600, 600), foreground="white", background="black")
         self.label = Label(image=bitmap_img)
         self.label.pack()
         tk.update()
 
     def update(self):
-        bitmap_img = BitmapImage(data=bitmap(400, 240), foreground="white", background="black")
+        bitmap_img = BitmapImage(data=bitmap(600, 600), foreground="white", background="black")
         self.label.configure(image=bitmap_img)
 
         tk.update()
@@ -37,9 +37,9 @@ class Display:
 
 tk = Tk()
 tk.title("cpu")
-tk.geometry("400x240")
+tk.geometry("600x600")
 tk.configure(background='black')
 display = Display(tk)
 while True:
-    time.sleep(0.1)
+    time.sleep(0.5)
     display.update()
