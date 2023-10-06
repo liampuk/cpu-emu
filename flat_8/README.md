@@ -37,6 +37,102 @@ The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sci
 
 ## Components
 
+### CPU
+
+#### Requirements
+
+- 8 bit opcodes, 8 bit addresses
+- Registers
+  - Accumulator
+  - General purpose registers (B, C)
+  - Stack pointer
+  - Flags
+  - PC, IR, MAR
+  - 5 output, 2 input registers
+
+#### Instruction Set
+
+Very loosely based on x86, following [this example](https://nbest.co.uk/Softwareforeducation/sms32v50/sms32v50_manual/245-IsetSummary.htm).
+
+Note: revisit this after writing programs, to remove if not needed. There will also be more instructions available to the assembler (`CMP`), but these can be implemented with macros.
+
+**Move instructions**
+- `MOV A, 15` : load accumulator with 15
+- `LDI A, [15]` : load RAM at address 15 into A
+- `LDR A, [B]` : load RAM at address B into A
+- `STI [15], A` : load A into RAM at address 15
+- `STR [B], A` : load A into RAM at address in B
+
+**Arithmatic instructions (sets flags, register and immediate modes)**
+- `ADD A, B` / `ADD A, 15`
+- `SUB A, B` / `SUB A, 15`
+- `AND A, B` / `AND A, 15`
+- `OR A, B` / `OR A, 15`
+- `XOR A, B` / `XOR A, 15`
+
+**Branch instructions**
+- `JMP`
+- `JZ` / `JNZ`
+- `JS` / `JNS`
+- `JO` / `JNO`
+
+**Stack instructions**
+- `CALL 30` push PC to the stack and jump to 30
+- `PUSH A` / `POP A` :  push/pop A to/from the stack
+- `PUSHF` / `POPF` : push/pop from/to the flags register
+
+**IO instructions**
+- `IN 2` : input from io port 2
+- `OUT 4` : output to io port 4
+
+**Misc instructions**
+- `HLT` : halt
+- `NOP` : no operation
+- `STI` : enable interrupts
+- `CLI` : disable interrupts
+
+**Assembler instructions**
+- `ORG 40` : generate code from address 40
+- `DB 15` : define byte
+
+
+| Instruction | Opcodes | Description                                 |
+|-------------|---------|---------------------------------------------|
+| NOP         | 00      | no operation                                |
+| MOV R, I    | 01 - 03 | load immediate value to register            |
+| LDI R, [I]  | 04 - 06 | load address at immediate value to register |
+| LDR R, [R]  | 07 - 0C | load address at register to register        |
+| STI [I], R  | 0D - 0F | store register at immediate address         |
+| STR [R], R  | 10 - 15 | store register at register address          |
+| ADD R, R    | 16 - 1B | add register to register                    |
+| ADD R, I    | 1C - 1E | add immediate value to register             |
+| SUB R, R    | 1F - 24 | subtract register from register             |
+| SUB R, I    | 25 - 27 | subtract immediate value from register      |
+| AND R, R    | 28 - 3D | and register with register                  |
+| AND R, I    | 3E - 40 | and immediate value with register           |
+| 0R R, R     | 41 - 46 | or register with register                   |
+| 0R R, I     | 47 - 49 | or immediate value with register            |
+| X0R R, R    | 4A - 4F | xor register with register                  |
+| X0R R, I    | 50 - 52 | xor immediate value with register           |
+| JMP I       | 51      | jump immediate                              |
+| JZ I        | 52      | jump if zero                                |
+| JNZ I       | 53      | jump if not zero                            |
+| JS I        | 54      | jump if negative                            |
+| JNS I       | 55      | jump if not negative                        |
+| JO I        | 56      | jump on overflow                            |
+| JNO I       | 57      | jump on no overflow                         |
+| CALL I      | 58      | call subroutine                             |
+| PUSH R      | 59 - 5B | push registers to stack                     |
+| POP R       | 5C - 5E | pop stack to registers                      |
+| PUSHF       | 5F      | push flags register to stack                |
+| POPF        | 60      | pop flags from stack to register            |
+| IN I        | 61 - 68 | input from io port I                        |
+| OUT I       | 69 - 70 | output to io port I                         |
+| STI         | 71      | enable interrupts                           |
+| CLI         | 72      | disable interrupts                          |
+| ...         | ...     | ...                                         |
+| HLT         | 255     | halt                                        |
+
 ### VGA Circuit
 
 The VGA circuit outputs a standard 640 x 480 @ 60Hz timing signal. This will be implemented using a 16MHz oscillator, so is slightly out of spec but should be fine. Output will be in text mode only, with a resolution of 50 x 30 characters (400 x 240 pixels). This design is heavily based off [this series](https://www.youtube.com/watch?v=LCPOXZ7zaD0) by Slu4.
