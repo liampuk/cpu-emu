@@ -31,6 +31,7 @@ This emulator is a proof of concept for a breadboard cpu I plan to build. The pl
   - see [here](https://cronop-io.github.io/posts/retrocomputing,%20binary%20analysis,%20hardware/2020-11-25-GameBoyPart1/) for interfacing with a gb cartridge
 - one output should display on 7-segment (probably vga data)
 - inputs/outputs should be 9 pin connectors, with 1 pin for interrupts and output enables (output enable can be used as an interrupt from the cpu to a peripheral device)
+- db9 cable for outputs, 9 pin din for inputs
 
 The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sciencemuseumgroup.org.uk/objects/co8061113/dec-pdp-8-minicomputer-1965-minicomputers-computers), but of course this computer is flat, because it will be built on breadboards. (I know this is daft)
 
