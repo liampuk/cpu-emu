@@ -168,15 +168,20 @@ class State:
             self.pc = (self.pc + 1) % 256
 
     def print(self):
-        print("bus %s | clk %d | t_state %d | " % (f'{self.bus:08b}', self.clock, self.t_state), end='')
+        print("bus %s | t %d | " % (f'{self.bus:08b}', self.t_state), end='')
         print(
-            "pc %d | mar %d | ir %s | alu %d | reg_a %d | reg_b  %d | out %d | " %
-            (self.pc, self.mar, f'{self.ir:08b}', self.alu, self.reg_a, self.reg_b, self.out_0),
+            "pc %s | mar %s | ir %s | x %s | y %s | alu %s | " %
+            (f'{self.pc:03n}', f'{self.mar:03n}', f'{self.ir:08b}', f'{self.alu_x:03n}', f'{self.alu_y:03n}', f'{self.alu:03n}'),
             end=''
         )
         print(
-            "control word %s | control active %s" %
-            (f'{self.control_word:032b}', [d.name for d in self.control_active_bits])
+            "a %s | b %s | c %s | stack %s | o1 %s | " %
+            (f'{self.reg_a:03n}', f'{self.reg_b:03n}', f'{self.reg_c:03n}', f'{self.out_0:03n}', f'{self.stack:03n}'),
+            end=''
+        )
+        print(
+            "flags %s | control %s" %
+            (f'{self.flags:04b}', [d.name for d in self.control_active_bits])
         )
 
     def step_clock(self):

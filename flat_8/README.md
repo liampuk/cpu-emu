@@ -75,7 +75,7 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `JMP`
 - `JZ` / `JNZ`
 - `JS` / `JNS`
-- `JO` / `JNO`
+- `JC` / `JNC`
 
 **Stack instructions**
 - `CALL 30` push PC to the stack and jump to 30
@@ -125,16 +125,22 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 | CALL I      | 58      | call subroutine (push pc to stack)          |
 | RET         | 59      | return from subroutine (pop pc from stack)  |
 | IRET        | 60      | return from interrupt                       |
-| PUSH R      | 61 - 5D | push registers to stack                     |
-| POP R       | 5E - 60 | pop stack to registers                      |
-| PUSHF       | 61      | push flags register to stack                |
-| POPF        | 62      | pop flags from stack to register            |
-| IN I        | 63 - 70 | input from io port I                        |
-| OUT I       | 71 - 78 | output to io port I                         |
-| STI         | 79      | enable interrupts                           |
-| CLI         | 80      | disable interrupts                          |
+| PUSH R      | 61 - 63 | push registers to stack                     |
+| POP R       | 64 - 66 | pop stack to registers                      |
+| PUSHF       | 67      | push flags register to stack                |
+| POPF        | 68      | pop flags from stack to register            |
+| IN I        | 69 - 70 | input from io port I                        |
+| OUT I       | 71 - 76 | output to io port I                         |
+| STI         | 77      | enable interrupts                           |
+| CLI         | 78      | disable interrupts                          |
 | ...         | ...     | ...                                         |
 | HLT         | 255     | halt                                        |
+
+#### Microcode considerations
+
+- Most instructions are explicit in what they need the cpu to do (`JMP` always means jump to an immediate value). Some are less so, like `MOV`, this instruction moves an immediate value into any of the general purpose registers, and so needs to be compiled to 3 different opcodes depending on the destination.
+- For instructions dependent on flags, like `JNZ`, the microcode needs to be indexed with the opcode and the flags register
+- For Interrupts, the microcode needs to be indexed with the flags register (interrupt enable flag) and the interrupt line
 
 ### VGA Circuit
 
