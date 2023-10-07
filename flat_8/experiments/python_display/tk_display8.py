@@ -1,6 +1,5 @@
 import random
 import time
-import tkinter
 from tkinter import *
 import fonts
 
@@ -35,7 +34,7 @@ def characters(_img_data):
     for row in range(29):
         for y in range(8):
             for x in range(8):
-                _img_data[y+start_y+row*8][x+start_x] = fonts.ibm_int[y+x*8+row*64]
+                _img_data[y+start_y+row*8][x+start_x] = fonts.ibm_int[y + x * 8 + row * 64]
 
     return _img_data
 

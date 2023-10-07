@@ -120,8 +120,8 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 | JNZ I       | 53      | jump if not zero                            |
 | JS I        | 54      | jump if negative                            |
 | JNS I       | 55      | jump if not negative                        |
-| JO I        | 56      | jump on overflow                            |
-| JNO I       | 57      | jump on no overflow                         |
+| JC I        | 56      | jump on carry                               |
+| JNC I       | 57      | jump on no carry                            |
 | CALL I      | 58      | call subroutine (push pc to stack)          |
 | RET         | 59      | return from subroutine (pop pc from stack)  |
 | IRET        | 60      | return from interrupt                       |
