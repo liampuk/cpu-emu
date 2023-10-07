@@ -49,6 +49,7 @@ The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sci
   - Flags
   - PC, IR, MAR
   - 5 output, 2 input registers
+- Interrupts
 
 #### Instruction Set
 
@@ -121,15 +122,17 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 | JNS I       | 55      | jump if not negative                        |
 | JO I        | 56      | jump on overflow                            |
 | JNO I       | 57      | jump on no overflow                         |
-| CALL I      | 58      | call subroutine                             |
-| PUSH R      | 59 - 5B | push registers to stack                     |
-| POP R       | 5C - 5E | pop stack to registers                      |
-| PUSHF       | 5F      | push flags register to stack                |
-| POPF        | 60      | pop flags from stack to register            |
-| IN I        | 61 - 68 | input from io port I                        |
-| OUT I       | 69 - 70 | output to io port I                         |
-| STI         | 71      | enable interrupts                           |
-| CLI         | 72      | disable interrupts                          |
+| CALL I      | 58      | call subroutine (push pc to stack)          |
+| RET         | 59      | return from subroutine (pop pc from stack)  |
+| IRET        | 60      | return from interrupt                       |
+| PUSH R      | 61 - 5D | push registers to stack                     |
+| POP R       | 5E - 60 | pop stack to registers                      |
+| PUSHF       | 61      | push flags register to stack                |
+| POPF        | 62      | pop flags from stack to register            |
+| IN I        | 63 - 70 | input from io port I                        |
+| OUT I       | 71 - 78 | output to io port I                         |
+| STI         | 79      | enable interrupts                           |
+| CLI         | 80      | disable interrupts                          |
 | ...         | ...     | ...                                         |
 | HLT         | 255     | halt                                        |
 
