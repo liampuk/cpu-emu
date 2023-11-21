@@ -35,6 +35,28 @@ This emulator is a proof of concept for a breadboard cpu I plan to build. The pl
 
 The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sciencemuseumgroup.org.uk/objects/co8061113/dec-pdp-8-minicomputer-1965-minicomputers-computers), but of course this computer is flat, because it will be built on breadboards. (I know this is daft)
 
+### TODO
+- only 1 temporary register needed for the alu?
+- address input/output ports? (to save control lines)
+- add reset t-state control line
+- page bit (flags?)
+  - set using temporary register? 
+- EEPROM
+  - 8 bit word = 256 control lines, decode 6 lsb = 64
+  - addressed by opcode flags (PSCZ), and I flag AND with interrupt line = 8 + 4 + 1 = 13
+  - Atmel 28C64 - 64Kb, 8k words (13 bit address)
+- Does IO use the accumulator?
+- Should memory operations only use accumulator to simplify?
+
+### Software
+
+- ROM
+  - Check if xFF at address zero on cartridge
+  - If yes, load cartridge program into ram
+  - If no, memory editor (using keyboard)
+- Text editor
+  - input from keyboard, render characters on screen. Should handle new lines, backspaces
+
 ## Components
 
 ### CPU
@@ -76,6 +98,8 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `JZ` / `JNZ`
 - `JS` / `JNS`
 - `JC` / `JNC`
+- `MPAGE [15]`
+- `SPAGE [15]`
 
 **Stack instructions**
 - `CALL 30` push PC to the stack and jump to 30
@@ -97,44 +121,44 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `DB 15` : define byte
 
 
-| Instruction | Opcodes | Description                                 |
-|-------------|---------|---------------------------------------------|
-| NOP         | 00      | no operation                                |
-| MOV R, I    | 01 - 03 | load immediate value to register            |
-| LDI R, [I]  | 04 - 06 | load address at immediate value to register |
-| LDR R, [R]  | 07 - 0C | load address at register to register        |
-| STI [I], R  | 0D - 0F | store register at immediate address         |
-| STR [R], R  | 10 - 15 | store register at register address          |
-| ADD R, R    | 16 - 1B | add register to register                    |
-| ADD R, I    | 1C - 1E | add immediate value to register             |
-| SUB R, R    | 1F - 24 | subtract register from register             |
-| SUB R, I    | 25 - 27 | subtract immediate value from register      |
-| AND R, R    | 28 - 3D | and register with register                  |
-| AND R, I    | 3E - 40 | and immediate value with register           |
-| 0R R, R     | 41 - 46 | or register with register                   |
-| 0R R, I     | 47 - 49 | or immediate value with register            |
-| X0R R, R    | 4A - 4F | xor register with register                  |
-| X0R R, I    | 50 - 52 | xor immediate value with register           |
-| JMP I       | 51      | jump immediate                              |
-| JZ I        | 52      | jump if zero                                |
-| JNZ I       | 53      | jump if not zero                            |
-| JS I        | 54      | jump if negative                            |
-| JNS I       | 55      | jump if not negative                        |
-| JC I        | 56      | jump on carry                               |
-| JNC I       | 57      | jump on no carry                            |
-| CALL I      | 58      | call subroutine (push pc to stack)          |
-| RET         | 59      | return from subroutine (pop pc from stack)  |
-| IRET        | 60      | return from interrupt                       |
-| PUSH R      | 61 - 63 | push registers to stack                     |
-| POP R       | 64 - 66 | pop stack to registers                      |
-| PUSHF       | 67      | push flags register to stack                |
-| POPF        | 68      | pop flags from stack to register            |
-| IN I        | 69 - 70 | input from io port I                        |
-| OUT I       | 71 - 76 | output to io port I                         |
-| STI         | 77      | enable interrupts                           |
-| CLI         | 78      | disable interrupts                          |
-| ...         | ...     | ...                                         |
-| HLT         | 255     | halt                                        |
+| Instruction | Opcodes | Description                                      |
+|-------------|---------|--------------------------------------------------|
+| NOP         | 00      | no operation                                     |
+| MOV R, I    | 01 - 03 | load immediate value to register                 |
+| LDI R, [I]  | 04 - 06 | load address at immediate value to register      |
+| LDR R, [R]  | 07 - 0C | load address at register to register             |
+| STI [I], R  | 0D - 0F | store register at immediate address              |
+| STR [R], R  | 10 - 15 | store register at register address               |
+| ADD R, R    | 16 - 1B | add register to register                         |
+| ADD R, I    | 1C - 1E | add immediate value to register                  |
+| SUB R, R    | 1F - 24 | subtract register from register                  |
+| SUB R, I    | 25 - 27 | subtract immediate value from register           |
+| AND R, R    | 28 - 2D | and register with register                       |
+| AND R, I    | 2E - 30 | and immediate value with register                |
+| 0R R, R     | 31 - 36 | or register with register                        |
+| 0R R, I     | 37 - 39 | or immediate value with register                 |
+| X0R R, R    | 3A - 3F | xor register with register                       |
+| X0R R, I    | 40 - 42 | xor immediate value with register                |
+| JMP I       | 41      | jump immediate                                   |
+| JZ I        | 42      | jump if zero                                     |
+| JNZ I       | 43      | jump if not zero                                 |
+| JS I        | 44      | jump if negative                                 |
+| JNS I       | 45      | jump if not negative                             |
+| JC I        | 46      | jump on carry                                    |
+| JNC I       | 47      | jump on no carry                                 |
+| CALL I      | 48      | call subroutine (push pc to stack)               |
+| RET         | 49      | return from subroutine (pop pc from stack)       |
+| IRET        | 50      | return from interrupt (re-enable interrupt flag) |
+| PUSH R      | 51 - 53 | push registers to stack                          |
+| POP R       | 54 - 56 | pop stack to registers                           |
+| PUSHF       | 57      | push flags register to stack                     |
+| POPF        | 58      | pop flags from stack to register                 |
+| IN I        | 59 - 60 | input from io port I                             |
+| OUT I       | 61 - 65 | output to io port I                              |
+| STI         | 66      | enable interrupts                                |
+| CLI         | 67      | disable interrupts                               |
+| ...         | ...     | ...                                              |
+| HLT         | 255     | halt                                             |
 
 #### Microcode considerations
 

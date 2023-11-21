@@ -1,6 +1,7 @@
 import math
 from enum import Enum
 import argparse
+import time
 import microcode
 
 
@@ -26,18 +27,17 @@ class Control(Enum):
     Ua = 14
     Uo = 13
     Ux = 12
-    Eu = 11
-    Ef = 10
-    Lf = 9
-    I0 = 8
-    I1 = 7
-    O0 = 6
-    O1 = 5
-    O2 = 4
-    O3 = 3
-    O4 = 2
-    O5 = 1
-
+    Uf = 11
+    Eu = 10
+    Ef = 9
+    Lf = 8
+    I0 = 7
+    I1 = 6
+    O0 = 5
+    O1 = 4
+    O2 = 3
+    O3 = 2
+    O4 = 1
 
 class State:
 
@@ -53,6 +53,7 @@ class State:
     control_word: int = 0
     control_active_bits: list[Control] = []
     t_state: int = 0
+    interrupt: bool = False
 
     pc: int = 0
     mar: int = 0
@@ -70,8 +71,8 @@ class State:
     out_2: int = 0
     out_3: int = 0
     out_4: int = 0
-    out_5: int = 0
     stack: int = 0
+    # PISCZ
     flags: int = 0
 
     def build_memory(self, _bytecode):
@@ -135,8 +136,7 @@ class State:
             if Control.Ly in self.control_active_bits:
                 self.alu_y = self.bus
             if Control.Lf in self.control_active_bits:
-                # TODO shift bits?
-                self.flags = self.bus
+                self.flags = self.bus & 15
             if Control.O0 in self.control_active_bits:
                 self.out_0 = self.bus
             if Control.O1 in self.control_active_bits:
@@ -147,23 +147,34 @@ class State:
                 self.out_3 = self.bus
             if Control.O4 in self.control_active_bits:
                 self.out_4 = self.bus
-            if Control.O5 in self.control_active_bits:
-                self.out_5 = self.bus
 
         # Update ALU
-        # TODO flags
         if Control.Us in self.control_active_bits:
-            self.alu = self.alu_x - self.alu_y
-        if Control.Ua in self.control_active_bits:
-            self.alu = self.alu_x & self.alu_y
-        if Control.Uo in self.control_active_bits:
-            self.alu = self.alu_x | self.alu_y
-        if Control.Ux in self.control_active_bits:
-            self.alu = self.alu_x ^ self.alu_y
+            alu_sum = self.alu_x - self.alu_y
+        elif Control.Ua in self.control_active_bits:
+            alu_sum = self.alu_x & self.alu_y
+        elif Control.Uo in self.control_active_bits:
+            alu_sum = self.alu_x | self.alu_y
+        elif Control.Ux in self.control_active_bits:
+            alu_sum = self.alu_x ^ self.alu_y
         else:
-            self.alu = self.reg_a + self.reg_b
+            alu_sum = self.reg_a + self.reg_b
 
-        # Update pc
+        # Update Flags
+        if Control.Uf in self.control_active_bits:
+            self.flags = self.flags & 24
+            if alu_sum == 0:
+                self.flags += 1
+            # TODO This is overflow, change to carry
+            elif alu_sum > 255:
+                self.flags += 2
+            # TODO is this how the S flag would work?
+            elif alu_sum < 0:
+                self.flags += 4
+
+        self.alu = alu_sum % 256
+
+        # Update PC
         if self.clock and Control.Cp in self.control_active_bits:
             self.pc = (self.pc + 1) % 256
 
@@ -186,6 +197,7 @@ class State:
 
     def step_clock(self):
         if Control.Ch not in self.control_active_bits:
+            time.sleep(0.01)
             self.clock = not self.clock
             if not self.clock:
                 self.t_state = (self.t_state + 1) % 6
@@ -198,7 +210,7 @@ class State:
 
 def run(bytecode, verbose):
     state = State(bytecode, verbose)
-    for i in range(1, 192):
+    while Control.Ch not in state.control_active_bits:
         state.step_clock()
 
 
@@ -218,8 +230,8 @@ def convert_string_to_bytes(bytes_string):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
-        prog='sap_1_simulator',
-        description='SAP-1 Simulator',
+        prog='flat_8_simulator',
+        description='FLAT-8 Simulator',
     )
     parser.add_argument('-f', '--bytecode-file', type=str, default=None, help='Input bytecode file')
     parser.add_argument('-b', '--bytecode', type=str, default=None, help='Input bytecode')
