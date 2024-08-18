@@ -140,7 +140,25 @@ For read operations the page bit determines if ROM or RAM should be used. Write 
 - Black wood back panel
 - Dark wood frame
 - Clear perspex cover, with switches mounted and labels
-- fold down aluminium tray for keyboard
+- Aluminium bottom panel
+  - Keyboard (cutout only relevant keys, usb to ps/2 interface)
+  - Manual control switches (run/clock speed etc.)
+
+```
+[ DISP ]    [ VGA  ]      Display and VGA controller
+[ DISP ]    [ VGA  ]      Display and VGA controller
+[ IO   ] || [ IO   ]      4 outputs
+[ CLK  ] || [ 7SEG ]      Clock and 7 segment output
+[ ROM  ] || [ REGA ]      ROM and A register
+[ MAR  ] || [ ALU  ]      MAR and ALU
+[ RAM  ] || [ REGB ]      RAM and B register
+[ IR   ] || [ CTR  ]      IR and control logic
+[ IO   ] || [ IO   ]      1 output, 2 inputs
+[ KEYB ]    [ CART ]      Keyboard controller, cartridge loader
+--------------------
+ xx [ KEYBOARD ] xx       Keyboard and manual control switches
+ xx [ KEYBOARD ] xx       Keyboard and manual control switches
+```
 
 ### Controls
 
