@@ -131,7 +131,7 @@ class State:
             time.sleep(0.0001)
             self.clock = not self.clock
             if not self.clock:
-                self.t_state = (self.t_state + 1) % 6
+                self.t_state = (self.t_state + 1) % 5
             self.load_microcode()
             self.decode_control_word()
             self.update()

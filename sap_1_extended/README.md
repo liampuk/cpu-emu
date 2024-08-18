@@ -12,7 +12,7 @@ This is a simulation of the SAP-1 computer from Digital Computer Electronics wit
 ### Instruction Set
 
 | Instruction | Opcode | Description                           |
-|-------------|--------|---------------------------------------|
+| ----------- | ------ | ------------------------------------- |
 | NOP         | 0000   | no operation                          |
 | LDA         | 0001   | load accumulator                      |
 | ADD         | 0010   | add to accumulator                    |

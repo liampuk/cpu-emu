@@ -25,45 +25,45 @@ JNZ = 10
 # Instruction matrix
 
 matrix = [
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],                            # 0000 NOP
-    [Ep | Lm, Cp, Ro | Li, Ei | Lm, Ro | La, 0],                # 0001 LDA
-    [Ep | Lm, Cp, Ro | Li, Lm | Ei, Ro | Lb, La | Eu],          # 0010 ADD
-    [Ep | Lm, Cp, Ro | Li, Lm | Ei, Ro | Lb, La | Eu | Su],     # 0011 SUB
-    [Ep | Lm, Cp, Ro | Li, Ea | Lo, 0, 0],                      # 0100 OUT
-    [Ep | Lm, Cp, Ro | Li, Ei | Lm, Ri | Ea, 0],                # 0101 STA
-    [Ep | Lm, Cp, Ro | Li, Ei | La, 0, 0],                      # 0110 LDI
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],                      # 0111 JMP
-    [0, 0, 0, 0, 0, 0],                                         # 1000 JC
-    [0, 0, 0, 0, 0, 0],                                         # 1001 JZ
-    [0, 0, 0, 0, 0, 0],                                         # 1010 JNZ
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ch, 0, 0]                             # 1111 HLT
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],                            # 0000 NOP
+    [Ep | Lm, Cp | Ro | Li, Ei | Lm, Ro | La, 0],                # 0001 LDA
+    [Ep | Lm, Cp | Ro | Li, Lm | Ei, Ro | Lb, La | Eu],          # 0010 ADD
+    [Ep | Lm, Cp | Ro | Li, Lm | Ei, Ro | Lb, La | Eu | Su],     # 0011 SUB
+    [Ep | Lm, Cp | Ro | Li, Ea | Lo, 0, 0],                      # 0100 OUT
+    [Ep | Lm, Cp | Ro | Li, Ei | Lm, Ri | Ea, 0],                # 0101 STA
+    [Ep | Lm, Cp | Ro | Li, Ei | La, 0, 0],                      # 0110 LDI
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],                      # 0111 JMP
+    [0, 0, 0, 0, 0],                                         # 1000 JC
+    [0, 0, 0, 0, 0],                                         # 1001 JZ
+    [0, 0, 0, 0, 0],                                         # 1010 JNZ
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ch, 0, 0]                             # 1111 HLT
 ]
 
 # Flag dependent instruction matrices [C, Z]
 
 jc_flags = [
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0]
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0]
 ]
 
 jz_flags = [
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],
 ]
 
 jnz_flags = [
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, Ei | Lp, 0, 0],
-    [Ep | Lm, Cp, Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, Ei | Lp, 0, 0],
+    [Ep | Lm, Cp | Ro | Li, 0, 0, 0],
 ]
 
 

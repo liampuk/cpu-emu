@@ -33,14 +33,15 @@ This emulator is a proof of concept for a breadboard cpu I plan to build. The pl
 - inputs/outputs should be 9 pin connectors, with 1 pin for interrupts and output enables (output enable can be used as an interrupt from the cpu to a peripheral device)
 - db9 cable for outputs, 9 pin din for inputs
 
-The name is a reference to the [DEC *Straight-8* (PDP-8)](https://collection.sciencemuseumgroup.org.uk/objects/co8061113/dec-pdp-8-minicomputer-1965-minicomputers-computers), but of course this computer is flat, because it will be built on breadboards. (I know this is daft)
+The name is a reference to the [DEC _Straight-8_ (PDP-8)](https://collection.sciencemuseumgroup.org.uk/objects/co8061113/dec-pdp-8-minicomputer-1965-minicomputers-computers), but of course this computer is flat, because it will be built on breadboards. (I know this is daft)
 
 ### TODO
+
 - only 1 temporary register needed for the alu?
 - address input/output ports? (to save control lines)
 - add reset t-state control line
 - page bit (flags?)
-  - set using temporary register? 
+  - set using temporary register?
 - EEPROM
   - 8 bit word = 256 control lines, decode 6 lsb = 64
   - addressed by opcode flags (PSCZ), and I flag AND with interrupt line = 8 + 4 + 1 = 13
@@ -80,6 +81,7 @@ Very loosely based on x86, following [this example](https://nbest.co.uk/Software
 Note: revisit this after writing programs, to remove if not needed. There will also be more instructions available to the assembler (`CMP`), but these can be implemented with macros.
 
 **Move instructions**
+
 - `MOV A, 15` : load accumulator with 15
 - `LDI A, [15]` : load RAM at address 15 into A
 - `LDR A, [B]` : load RAM at address B into A
@@ -87,6 +89,7 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `STR [B], A` : load A into RAM at address in B
 
 **Arithmatic instructions (sets flags, register and immediate modes)**
+
 - `ADD A, B` / `ADD A, 15`
 - `SUB A, B` / `SUB A, 15`
 - `AND A, B` / `AND A, 15`
@@ -94,6 +97,7 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `XOR A, B` / `XOR A, 15`
 
 **Branch instructions**
+
 - `JMP`
 - `JZ` / `JNZ`
 - `JS` / `JNS`
@@ -102,27 +106,30 @@ Note: revisit this after writing programs, to remove if not needed. There will a
 - `SPAGE [15]`
 
 **Stack instructions**
+
 - `CALL 30` push PC to the stack and jump to 30
-- `PUSH A` / `POP A` :  push/pop A to/from the stack
+- `PUSH A` / `POP A` : push/pop A to/from the stack
 - `PUSHF` / `POPF` : push/pop from/to the flags register
 
 **IO instructions**
+
 - `IN 2` : input from io port 2
 - `OUT 4` : output to io port 4
 
 **Misc instructions**
+
 - `HLT` : halt
 - `NOP` : no operation
 - `STI` : enable interrupts
 - `CLI` : disable interrupts
 
 **Assembler instructions**
+
 - `ORG 40` : generate code from address 40
 - `DB 15` : define byte
 
-
 | Instruction | Opcodes | Description                                      |
-|-------------|---------|--------------------------------------------------|
+| ----------- | ------- | ------------------------------------------------ |
 | NOP         | 00      | no operation                                     |
 | MOV R, I    | 01 - 03 | load immediate value to register                 |
 | LDI R, [I]  | 04 - 06 | load address at immediate value to register      |
@@ -176,14 +183,14 @@ The next bit (`SB`) is skipped to halve the vertical resolution to 240 pixels.
 
 The next 3 bits (`CRI`) are used to index the row of the character currently pointed to by VRAM (characters are stored as 8 rows of bytes).
 
-The next 5 bits (`VA`) as used as the higher order VRAM address byte corresponding to values the cpu writes to register Y. Only 5 bits are required as only 30 characters can be rendered vertically (30 * 8 = 240 pixels).
+The next 5 bits (`VA`) as used as the higher order VRAM address byte corresponding to values the cpu writes to register Y. Only 5 bits are required as only 30 characters can be rendered vertically (30 \* 8 = 240 pixels).
 
 The last bit (`RB`) is used to allow the counter to reach 520 where it is reset.
 
 #### Counter value timings
 
 - Horizontal
-  - 0 - 49  VRAM address
+  - 0 - 49 VRAM address
   - 50 - 51 Front porch (high pulse)
   - 52 - 59 Sync pulse (low pulse)
   - 60 - 63 Back porch (high pulse)
@@ -205,7 +212,7 @@ The way these counts are converted into timing signals is very well explained in
 #### Horizontal
 
 | Section     | Time (µs) | Bytes | Pixels | Actual Time (µs) |
-|-------------|-----------|-------|--------|------------------|
+| ----------- | --------- | ----- | ------ | ---------------- |
 | Data        | 25.422    | 50    | 400    | 25               |
 | Front Porch | 0.636     | 2     | 16     | 1                |
 | Sync Pulse  | 3.813     | 8     | 64     | 4                |
@@ -215,7 +222,7 @@ The way these counts are converted into timing signals is very well explained in
 #### Vertical
 
 | Section     | Time (ms) | Lines    |
-|-------------|-----------|----------|
+| ----------- | --------- | -------- |
 | Data        | 15.253    | 480      |
 | Front Porch | 0.318     | 8 (10?)  |
 | Sync Pulse  | 0.064     | 2        |
@@ -226,3 +233,165 @@ The way these counts are converted into timing signals is very well explained in
 
 Current progress on emulating a display:
 ![image](https://user-images.githubusercontent.com/17195367/219976847-c291c90d-acc3-408a-a228-5989a43d04c9.png)
+
+<details>
+  <summary>Extra Notes</summary>
+
+```
+P page
+I interrupt
+S sign
+C carry
+Z zero
+
+Microcode: PSCZ[I]
+
+[I] = latch on T0 & I & interrupt, clear on disable interrupt
+
+13 bit microcode address
+>38 control lines
+
+Need T states too
+Probably 4 for call = 17
+Maybe lose zero?
+- Chatgpt says no - carry useful for non-signed, sign useful for signed
+- Probs lose sign
+- Maybe lose a bit of opcode: 7bit is 128
+Looks like 64x8 is max (16 bit address)
+128x8 = AT28C010? Looks expensive
+
+7 bit opcode, 4 bit flags = 11, 5 bit T state should be enough
+
+- Maybe lose the C register and wire A&B directly to ALU with buffer output? Saves 2 registers - no need for X & Y
+    - Unsure if this is a good idea as cpu is very memory bound
+- PS2 keyboard interface?
+    - Shift register, handle interrupt line in hardware
+    - eeprom map from ps2 code to character value, output parallel
+    - Mini ps2 keyboard - saves building a keyboard
+
+Load from cartridge
+Only 18 bytes
+
+0:
+MOV A, 0
+OUT A, 1
+IN B, 1
+SUB B, 0xFF
+JZ [8]
+
+8:
+ADD A, 1
+JZ [17]
+OUT A, 1
+IN B, 1
+MOV [A] B
+JMP [8]
+
+17:
+MPAGE [1]
+
+19:
+
+For this:
+- Need register input/output opcodes (ie. 3 opcodes per I/O)
+
+Memory editor
+- Hex characters should be encoded by their actual values
+    - 0: 0, 2: 2, A: 10, F: 15
+    - G: 16, low nibble is 0, would map to 0.
+- Low nibble of character can be masked to represent each half byte
+- 4 characters rendered to each line
+- First two address memory, last 2 are the value
+
+19:
+
+100:
+
+
+
+
+/*
+1234567890
+QWERTYUIOP
+ASDFGHJKLu
+ZXCVBNMldr
+r.sssssseb
+
+uldr arrows
+r run
+. fullstop
+s space
+e enter
+b backspace
+*/
+
+/*
+1234567890
+QWERTYUIOP
+ASDFGHJKLn
+ZXCVBNMbbn
+eessssssrr
+
+n: newline
+b: backspace
+e: escape
+r: run
+
+0-9 0-9
+10-36 A-Z
+37 newline
+38 backspace
+39 escape
+40 run
+*/
+
+
+
+
+
+No halt?
+No instruction register out?
+
+
+
+
+No interrupts?
+Every IO can be input or output
+Wire low 3 bits of opcode to io demux -> 8 enable bits for io
+Only need 2 control lines for io (input/output)
+Keyboard controller can be input/output
+- Initialise to xFF
+- Poll keyboard - if not xFF read key and set to xFF
+- Removes need for interrupts
+
+- Keyboard controller
+    - Shift register from ps/2
+    - Address eeprom with key codes
+        - Write eeprom every 8 clocks (or 11?)
+    - Eeprom always enabled to input
+    - Output to keyboard controller - if xFF reset eeprom
+- Maybe need 2 shift registers to ignore write if key released
+
+
+https://docs.google.com/document/d/1-nDv_8WEG1FrlO3kEK0icoYo-Z-jlhpCMiCstxGOCjQ/edit
+
+Keyboard Controller:
+It should:
+- Output the previous key - ignoring if key is lifted
+- Clear output until next keypress if buffer clear code is output from cpu
+
+How to?:
+- Output from cpu:
+    - If x01, reset shift registers to x00
+    - Else do nothing
+- Input to cpu:
+    - If previous char is lift mode, enable shift reg output = 0, else = 1
+    - AND shift register output with enable, to eeprom
+    - x00 maps to xFF in eeprom
+        - Ie. eeprom outputs xFF if in clear mode, or key lifted
+    - Other ps/2 codes map to hex (1 = x01, F = x0F)
+- Uh oh - will clear if key lifted before read.
+    - AND enable with clock? So eeprom is only latched
+```
+
+</details>
