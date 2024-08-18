@@ -6,21 +6,6 @@ This CPU design is based on the _SAP-1 extended_ but with an 8 bit address width
 - keyboard input
 - load from cartridge
 
-### Controls
-
-- Reset
-- Manual control (disables control, enables manual programming switches)
-- Clock speed
-- Single step
-- Run
-
-- CPU manual programming
-  - Bus
-  - MAR in
-  - RAM in
-  - PC in
-  - Increment PC
-
 ## Requirements
 
 - 8 bit data/address width
@@ -156,6 +141,21 @@ For read operations the page bit determines if ROM or RAM should be used. Write 
 - Dark wood frame
 - Clear perspex cover, with switches mounted and labels
 - fold down aluminium tray for keyboard
+
+### Controls
+
+- Reset
+- Manual control (disables control, enables manual programming switches)
+- Clock speed
+- Single step
+- Run
+
+- CPU manual programming
+  - Bus
+  - MAR in
+  - RAM in
+  - PC in
+  - Increment PC
 
 ## Keyboard
 
