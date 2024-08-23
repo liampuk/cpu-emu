@@ -1,15 +1,12 @@
-; Test program
+; Sum test program
 
     ldi 0       ; load 0 into accumulator
 
 start:
-    add a       ; add contents of a (16) into accumulator
+    adi 15      ; add immediate 15 to accumulator
     outa        ; output accumulator
-    jc stop     ; jump to address 5 if the carry flag is set
-    jmp start   ; jump to address 1
+    jc stop     ; jump to stop subroutine if the carry flag is set
+    jmp start   ; jump to start subroutine
 
 stop:
     hlt         ; halt clock
-
-    org 255
-a:  db 15       ; store 16 in memory

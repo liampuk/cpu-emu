@@ -16,17 +16,9 @@ To inspect the output file, use
 
 ### Simulator
 
-The simulator can take bytecode, binary files or assembly files as an input, eg:
+The simulator has a hardcoded rom (rom.py). Custom rom and ram can be provided with `-r --rom` and `-m --ram`
 
-`python simulator.py -b 000100101111000000000010`
-
-or
-
-`python simulator.py -f bin/a.out`
-
-or
-
-`python simulator.py -a programs/loop.asm`
+`python simulator.py -r bin/a.out`
 
 ## Overview
 
@@ -46,11 +38,11 @@ or
 
 Based on the sap-1 extended instruction set with a 5 bit opcode allowing for up to 32 instructions. Additional instructions are:
 
-- ADD/SUB with memory address mode
-- 6 outputs, 2 inputs
-- Compare (set flags but don't update accumulator)
-- Change page bit
-- Reset cpu
+- `ADD/SUB`: add/sub with memory address mode
+- `OUTA / OUTB ...`: 6 outputs, 2 inputs
+- `CMP`: Compare (set flags but don't update accumulator)
+- `PAGE0 / PAGE1`: Change page bit
+- `RESET`: Reset cpu
 
 Instructions that use immediate values or a memory address use 2 bytes.
 
@@ -67,7 +59,7 @@ Instructions that use immediate values or a memory address use 2 bytes.
 | SUI 15      | 01000  | subtract immediate from accumulator               | x       |
 | SUB [15]    | 01001  | subtract memory address from accumulator          | x       |
 | CMI 15      | 01010  | compare immediate to accumulator (set flags)      | x       |
-| CMP [15]    | 01011  | compare memory address to accumulator (set flags) |         |
+| CMP [15]    | 01011  | compare memory address to accumulator (set flags) | x       |
 |             | 01100  |                                                   |         |
 |             | 01101  |                                                   |         |
 |             | 01110  |                                                   |         |
@@ -91,18 +83,28 @@ Instructions that use immediate values or a memory address use 2 bytes.
 
 ### Assembler Instructions
 
-These instructions are assembler directives and control how code is assembled. In addition to these codes, labels can be used to reference locations.
+- `ORG` and `DB` instructions are assembler directives and control how code is assembled
+- The assembler ignores comments that start with `;`
+- Labels can be used to reference locations
+- Relative addresses to labels can be used with `+`
 
 ```
-    LDI 0       ; Load accumulator with 0
-  
-Func:           ; Func subroutine
-    ADD 4       ; Add 4 to accumulator
-    OUTA        ; Output accumulator
-    JMP Start   ; Jump to Func subroutine
-```
+; Example program
 
- The assembler ignores comments that start with `;`.
+LOADER:                 ; start of loader subroutine
+    lda PROGRAM +0      ; load accumulator with program subroutine with relative memory address
+    stm 0               ; store in RAM
+    lda PROGRAM +1
+    stm 1
+
+PROGRAM:                ; subroutine
+    db ldi
+    db 255
+    db hlt
+    
+    org 30              ; unused byte at memory location 30
+    db 255
+```
 
 | Instruction | Description                                     |
 |-------------|-------------------------------------------------|
@@ -170,10 +172,8 @@ For IO operations, the opcode is combined with the control signals to control th
 
 ### Paging
 
-For read operations the page bit determines if ROM or RAM should be used. Write operations always go to RAM. This allows for easy loading from peripherals to RAM, as the page does not need to be changed when writing while in Page 0 (ROM).
-
-- input to ROM should be `!page AND Ro`: if page is low and Ro high, enable ROM out
-- input to RAM should be `page AND Ro`: if page is high and Ro high, enable RAM out
+For read operations the page bit determines if ROM or RAM should be used. Write operations always go to RAM. This allows for easy loading from peripherals to RAM, as the page does not need to be changed when executing from ROM.
+- Access to ROM/RAM is controlled by the `So` (Storage out - ROM) and `Ro` (Ram out) control lines.
 
 <details>
 <summary>Extensions</summary>

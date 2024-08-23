@@ -40,7 +40,7 @@ def bitmap(width, height):
 
 
 tk = Tk()
-tk.title("cpu")
+tk.title("cpu_1")
 tk.geometry("400x240")
 tk.configure(background='black')
 bitmap = BitmapImage(data=bitmap(400, 240),foreground="white", background="black")

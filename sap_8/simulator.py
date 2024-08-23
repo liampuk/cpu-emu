@@ -118,7 +118,7 @@ class State:
             self.memory[i] = byte
 
     def load_microcode(self):
-        self.control_word = microcode.build(self.flags, self.ir, self.t_state)
+        self.control_word = microcode.build(self.page, self.flags, self.ir, self.t_state)
 
     def decode_control_word(self):
         self.control_active_bits.clear()
@@ -138,10 +138,9 @@ class State:
         if Control.Co in self.control_active_bits:
             self.bus = self.ir
         if Control.Ro in self.control_active_bits:
-            if self.page == 0:
-                self.bus = rom[self.mar]
-            elif self.page == 1:
-                self.bus = self.memory[self.mar]
+            self.bus = self.memory[self.mar]
+        if Control.So in self.control_active_bits:
+            self.bus = rom[self.mar]
         if Control.Po in self.control_active_bits:
             self.bus = self.pc
         if Control.Io in self.control_active_bits:

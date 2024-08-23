@@ -81,12 +81,15 @@ def assemble(input_file_name, output_file_name=None):
                 labels_as_indexes.append(line)
                 j += 1
 
-        print(labels)
-
         instruction_array: list = [0] * 256
         j = 0
 
         for line in labels_as_indexes:
+            delta = 0
+            if len(line.split('+', 1)) == 2:
+                delta = int(line.split('+', 1)[1])
+            line = line.split('+', 1)[0].strip()
+
             if line in opcodes.keys():
                 instruction_array[j] = int(opcodes[line])
                 j += 1
@@ -94,7 +97,7 @@ def assemble(input_file_name, output_file_name=None):
                 instruction_array[j] = int(line)
                 j += 1
             elif line in labels.keys():
-                instruction_array[j] = int(labels[line])
+                instruction_array[j] = int(labels[line]) + delta
                 j += 1
             elif ':' in line:
                 j = int(line.split(':', 1)[0])

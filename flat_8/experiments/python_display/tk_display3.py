@@ -38,7 +38,7 @@ class Display:
 
 
 tk = Tk()
-tk.title("cpu")
+tk.title("cpu_1")
 tk.geometry("400x240")
 tk.configure(background='black')
 display = Display(tk)
